@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import { generarToken } from '../helpers/generarToken.js';
+
 
 const veterinarioSchema = mongoose.Schema({
     nombre: {
@@ -23,16 +26,36 @@ const veterinarioSchema = mongoose.Schema({
     },
     web: {
         type: String,
-        default: null
+        default: null,
     },
     token:{
-        type: String
+        type: String,
+        default: generarToken(),
     },
     confirmado:{
         type: Boolean,
-        default: false
+        default: false,
     }
 });
+
+veterinarioSchema.pre("save", async function(next){
+    if (!this.isModified("password")){
+        next();
+    }
+
+    // hasheando 
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+});
+
+veterinarioSchema.methods.comprobarCredenciales = async function (pswdForm) {
+    try {
+        const resultado = await bcrypt.compare(pswdForm, this.password)
+        return resultado;
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 const Veterinario = mongoose.model('Veterinario', veterinarioSchema);
 
