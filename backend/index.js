@@ -2,6 +2,7 @@ import  express  from "express"; // framework para conectar bd
 import dotenv from 'dotenv' // escanea el proyecto y lee las env
 import conectarDB from "./config/db.js"; // fn para conectarse a la bd
 import veterinarioRoutes from "./routes/veterinarioRoutes.js";
+import pacienteRoutes from "./routes/pacienteRoutes.js"
 
 
 const app = express();
@@ -15,6 +16,7 @@ dotenv.config()
 conectarDB()
 
 app.use('/api/veterinarios', veterinarioRoutes);
+app.use('/api/pacientes', pacienteRoutes);
 
 // add env to choose the right port when deployment
 
