@@ -38,14 +38,13 @@ const Login = () => {
                         text-white py-3 px-10 uppercase md:w-auto"
                     />
 
-                   
                 </form>
                 
                 <nav className="mt-5 grid grid-rows-2 gap-2">
                     <Link to='/registrar'
                     className="block my-3 text-gray-500"
                     >No tienes una cuenta? Registrarte Aqui!</Link>
-                    <Link to='/olvide-password'
+                    <Link to='/olvidePassword'
                     className="block my-3 text-gray-500"
                     >Olvide mi password</Link>
                 </nav>

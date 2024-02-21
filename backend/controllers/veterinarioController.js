@@ -1,7 +1,7 @@
 import Veterinario from "../models/Veterinario.js";
 import generarJWT from "../helpers/generarjwt.js";
 import { generarToken } from "../helpers/generarToken.js";
-
+import emailRegistro from "../helpers/emailRegistro.js";
 
 const registrar = async (req, res) =>{
 
@@ -13,7 +13,6 @@ const registrar = async (req, res) =>{
     const existeUsuario = await Veterinario.findOne({email});
 
     if (existeUsuario){
-        console.log('YA EXISTE USUARIO APA!!!')
 
         // generar un error para que no se ejecute mas el programa una vez existe el user
         const error = new Error('YA EXISTE EL USUARIO APAA');
@@ -27,6 +26,13 @@ const registrar = async (req, res) =>{
         // guardar un nuevo veterinario
         const veterinario = new Veterinario(req.body);
         const veterinarioGuardado = await veterinario.save();
+
+        // enviar el email con el token
+        emailRegistro({
+            email,
+            nombre,
+            token: veterinarioGuardado.token
+        });
 
         res.json(veterinarioGuardado);
 
