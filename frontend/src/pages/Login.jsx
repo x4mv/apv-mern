@@ -1,21 +1,21 @@
 import { Link, useNavigate} from "react-router-dom"
-import useAuth from "../hooks/useAuth"
 import { useState } from "react";
 import Alerta from "../components/Alerta";
 import clienteAxios from "../config/axios";
+import useAuth from "../hooks/useAuth";
 
 
 
 
 const Login = () => {
 
-    const {auth} = useAuth();
-
     const [email ,setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [alerta, setAlerta] = useState({})
 
-    const navigate = useNavigate()
+    const {setAuth} = useAuth();
+
+    const navigate = useNavigate();
 
 
     const handleSubmit = async  (e) => {
@@ -34,16 +34,17 @@ const Login = () => {
         try {
 
             const {data} = await clienteAxios.post('/veterinarios/login',{email, password})
-            
-            localStorage.setItem('token', data.tokenAuth);
-            
+            localStorage.setItem('token', data.token);
+            setAuth(data);
             navigate('/admin')
+            return;
             
         } catch (error) {
             setAlerta({
                 msg: error.response.data.msg,
                 error:true
             })
+            return;
         }
     }
 

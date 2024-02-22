@@ -2,17 +2,24 @@ import {  useState, useEffect, createContext } from "react";
 import clienteAxios from "../config/axios";
 
 
+
+
 const AuthContext = createContext()
 
 const AuthProvider = ({children}) => {
 
     const [ auth , setAuth ] = useState({})
+    const [cargando , setCargando ] = useState(true)
 
     useEffect(() => {
+        
         const autenticarUsuario = async () =>{
             const token = localStorage.getItem('token')
 
-            if (!token) return
+            if (!token){
+                setCargando(false);
+                return;
+            }
 
             const config = {
 
@@ -30,20 +37,28 @@ const AuthProvider = ({children}) => {
             } catch (error) {
                 console.log(error.response.data.msg)
                 setAuth({})
+                
             }
-        
-            
 
-            
+            setCargando(false)
+        
         }
         autenticarUsuario();
     }, [])
+
+    const cerrarSesion = () => {
+        localStorage.removeItem('token');
+        setAuth({})
+        
+    }
     
     return (
         <AuthContext.Provider 
             value={{
                 auth,
-                setAuth
+                setAuth,
+                cargando,
+                cerrarSesion
             }}>
             {children}
         </AuthContext.Provider>
