@@ -2,7 +2,7 @@ import Veterinario from "../models/Veterinario.js";
 import generarJWT from "../helpers/generarjwt.js";
 import { generarToken } from "../helpers/generarToken.js";
 import emailRegistro from "../helpers/emailRegistro.js";
-
+import emailOlvidePassword from "../helpers/emailOlvidePassword.js";
 const registrar = async (req, res) =>{
 
     
@@ -101,7 +101,7 @@ const autenticar = async (req, res, next) => {
 
     // Revisar el pswd
     if( await usuario.comprobarCredenciales(password)){
-        res.json({id:generarJWT(usuario.id)});
+        res.json({tokenAuth:generarJWT(usuario.id)});
     }else{
         const wrongPass = new Error('Password incorrecto APA')
         return res.status(403).json({msg: wrongPass.message});
@@ -127,7 +127,15 @@ const olvidePassword = async (req, res, next) => {
     try {
         usuario.token = generarToken();
         await usuario.save()
-        res.json({msg: 'Hemos enviado un email con las instrucciones'})
+
+        // enviar email con instrucciones
+        emailOlvidePassword({
+            email,
+            nombre: usuario.nombre,
+            token: usuario.token
+        });
+
+        res.json({msg: 'Revisa tu inbox apa'})
         return next();
     } catch (error) {
         console.log(error);

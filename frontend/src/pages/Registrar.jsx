@@ -166,7 +166,7 @@ const Registrar = () => {
                     <Link to='/'
                     className="block my-3 text-gray-500"
                     >Ya tienes una cuenta? Ingresa Aqui!</Link>
-                    <Link to='/olvidePassword'
+                    <Link to='/olvide-password'
                     className="block my-3 text-gray-500"
                     >Olvide mi password</Link>
                 </nav>
