@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Alerta from "./Alerta";
 import usePacientes from "../hooks/usePacientes";
 
@@ -12,9 +12,28 @@ const Formulario = () => {
     const [ fecha, setFecha ] = useState('')
     const [ sintomas, setSintomas ] = useState('')
 
+
+    const [id, setId] = useState(null);
+
     const [alerta, setAlerta] = useState({})
 
-    const { guardarPaciente } = usePacientes();
+    const { guardarPaciente, paciente } = usePacientes();
+
+
+    // verificando si esta en modo edicion 
+
+    useEffect(() => {
+
+        if(paciente?.nombre){
+            setNombre(paciente.nombre)
+            setPropietario(paciente.propietario)
+            setEmail(paciente.email)
+            setFecha(paciente.fecha.substr(0,10))
+            setSintomas(paciente.sintomas)
+            setId(paciente._id)
+        }
+        
+    }, [paciente])
 
 
 
@@ -29,11 +48,20 @@ const Formulario = () => {
         }
 
 
-        setAlerta({})
         guardarPaciente({
-            nombre, propietario, email, fecha, sintomas
+            nombre, propietario, email, fecha, sintomas, id
         })
-    }
+        setAlerta({msg: 'Guardado correctamente'})
+
+        // reiniciando los campost una vez se termine el proceso 
+        setNombre('');
+        setPropietario('');
+        setEmail('');
+        setFecha('');
+        setSintomas('');
+        setId(null);
+        
+}
 
     const { msg } = alerta 
 
@@ -121,7 +149,7 @@ const Formulario = () => {
                     className="bg-indigo-600 w-full p-3 text-white upppercase
                     font-bold hover:bg-indigo-700 mt-3 cursor-pointer
                     transition-colors"
-                    value="Agregar Paciente"
+                    value={id ? 'Editar Paciente ' : 'Agregar Paciente'}
                 />
             </form>
 

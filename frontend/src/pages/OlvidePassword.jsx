@@ -36,7 +36,7 @@ const OlvidePassword = () => {
                 error: true
             })
         }
-        console.log(email)
+        
     }
 
     const { msg } = alerta
