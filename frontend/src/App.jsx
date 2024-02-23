@@ -5,7 +5,12 @@ import ConfirmarCuenta from "./pages/ConfirmarCuenta";
 import OlvidePassword from "./pages/OlvidePassword";
 import Registrar from "./pages/Registrar";
 import NuevoPassword from "./pages/NuevoPassword";
+import EditarPerfil  from "./pages/EditarPerfil";
+import CambiarPassword from "./pages/CambiarPassword"
 import RutaProtegida from "./layout/RutaProtegida";
+
+
+
 
 import { AuthProvider } from "./context/AuthProvider";
 import { PacientesProvider } from "./context/PacientesProvider";
@@ -28,6 +33,9 @@ const App = () => {
 
             <Route path='/admin' element={<RutaProtegida/>}>
               <Route index element={<AdminPacientes/>}/>
+              <Route path='perfil' element={<EditarPerfil/>}/>
+              <Route path='cambiar-password' element={<CambiarPassword/>}/>
+
             </Route>
           </Routes>
         </PacientesProvider>
