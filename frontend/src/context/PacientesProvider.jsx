@@ -104,6 +104,30 @@ const PacientesProvider = ({children}) =>{
         }
     }
 
+    const actualizarDatosPerfil = async (datos) => {
+        const token = localStorage.getItem('token');
+        const config = {
+            headers: {
+                "Content-Type":"application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            const url = `/veterinarios/perfil/${datos._id}`
+            await clienteAxios.put(url, datos, config)
+            return {
+                msg:'almacenado correctamente',
+                error: false
+            }
+        } catch (error) {
+            return {
+                msg: error.response.data.msg,
+                error: true
+            }
+        }
+    }
+
     return (
         <PacientesContext.Provider 
             value={{
@@ -111,7 +135,8 @@ const PacientesProvider = ({children}) =>{
                 guardarPaciente,
                 setEdicion,
                 paciente,
-                eliminarPaciente
+                eliminarPaciente,
+                actualizarDatosPerfil,
             }}
         >
             {children}

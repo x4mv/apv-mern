@@ -199,6 +199,44 @@ const nuevoPassword = async( req, res, next) => {
 
 }
 
+const actualizarPerfil = async (req, res, next) => {
+
+    const veterinario = await Veterinario.findById(req.params.id);
+
+    if (!veterinario){
+        const error = new Error('No existe el veterinario' )
+        res.status(400).json({msg:error.message})
+        return next();
+    }
+
+    const {email} = req.body
+    if (veterinario.email !== req.body.email){
+        const existeEmail = await Veterinario.findOne({email})
+        if ( existeEmail){
+            const error = new Error('El correo ya esta registrado apa');
+            res.status(401).json({msg: error.message});
+            return next();
+        }
+    }
+
+    try {
+        veterinario.nombre = req.body.nombre;
+        veterinario.email = req.body.email;
+        veterinario.telefono = req.body.telefono
+        veterinario.web = req.body.web;
+
+        const veterinarioActualizado = await veterinario.save()
+
+        res.json(veterinarioActualizado);
+        return next();
+    } catch (error) {
+        console.log(error)
+        return next();
+    }
+
+
+}
+
 export {
     registrar,
     perfil,
@@ -206,5 +244,6 @@ export {
     autenticar,
     olvidePassword,
     comprobarToken,
-    nuevoPassword
+    nuevoPassword,
+    actualizarPerfil
 }
