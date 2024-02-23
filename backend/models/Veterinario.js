@@ -49,12 +49,10 @@ veterinarioSchema.pre("save", async function(next){
 });
 
 veterinarioSchema.methods.comprobarCredenciales = async function (pswdForm) {
-    try {
-        const resultado = await bcrypt.compare(pswdForm, this.password)
-        return resultado;
-    } catch (error) {
-        console.log(error);
-    }
+    
+        return await bcrypt.compare(pswdForm, this.password)
+        
+    
 }
 
 const Veterinario = mongoose.model('Veterinario', veterinarioSchema);

@@ -1,13 +1,13 @@
 import { createContext, useEffect, useState } from "react";
 import clienteAxios from "../config/axios";
-
+import useAuth from '../hooks/useAuth'
 const PacientesContext = createContext();
 
 const PacientesProvider = ({children}) =>{
 
     const [ pacientes , setPacientes] = useState([])
     const [ paciente, setPaciente ] = useState({})
-
+    const { auth } = useAuth()
     // listando los pacientes nada mas cargar la pagina
     useEffect( () => {
         const obtenerPacientes = async () => {
@@ -30,7 +30,7 @@ const PacientesProvider = ({children}) =>{
             }
         }
         obtenerPacientes();
-    }, [])
+    }, [auth])
 
     //agregando un nuevo paciente a la bd
 

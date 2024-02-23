@@ -3,6 +3,7 @@ import generarJWT from "../helpers/generarjwt.js";
 import { generarToken } from "../helpers/generarToken.js";
 import emailRegistro from "../helpers/emailRegistro.js";
 import emailOlvidePassword from "../helpers/emailOlvidePassword.js";
+
 const registrar = async (req, res) =>{
 
     
@@ -237,6 +238,44 @@ const actualizarPerfil = async (req, res, next) => {
 
 }
 
+
+const actualizarPassword = async (req, res, next) => {
+
+    // leer los datos 
+
+    // veterniario 
+    const { _id } = req.veterinario;
+
+    // passwords
+    const { passwordActual, passwordNueva } = req.body;
+
+    //comprobar que veterinario exista
+    const veterinario = await Veterinario.findById(_id);
+
+    if (!veterinario){
+        const error = new Error('No existe el veterinario' )
+        res.status(400).json({msg:error.message})
+        return next();
+    }
+
+    //comprobar el password
+
+    if(await veterinario.comprobarCredenciales(passwordActual)){
+        // almacenar el new pass
+
+        veterinario.password = passwordNueva;
+        await veterinario.save()
+
+        res.json({msg:'La password ah sido actualizada con exito'})
+        return next();
+    }else{
+        const error = new Error('La password actual es incorrecta' )
+        res.status(400).json({msg:error.message})
+        return next();
+    }
+
+    //almacenar el new pass
+}
 export {
     registrar,
     perfil,
@@ -245,5 +284,6 @@ export {
     olvidePassword,
     comprobarToken,
     nuevoPassword,
-    actualizarPerfil
+    actualizarPerfil,
+    actualizarPassword
 }
